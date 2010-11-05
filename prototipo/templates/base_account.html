@@ -1,0 +1,17 @@
+{% extends 'base_generic.html' %}
+
+{% block header %}
+    <script type="text/javascript" src="/site_media/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/site_media/js/account.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="course_instance_selection_div">
+        <select id="course_instance_selection">
+            {% for role in roles %}
+                <option value="{{ role.generate_url }}" {% if role.selected %}selected="selected"{% endif %}>{{ role.get_select_text }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    {% block body %} {% endblock %}
+{% endblock %}

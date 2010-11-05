@@ -10,3 +10,4 @@ from message_ring import MessageRing
 from message import Message
 from report_description import ReportDescription
 from report import Report
+from common_role_info import CommonRoleInfo

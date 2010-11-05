@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from itsense import settings
 from forms import *
 from models import *
+from utils import *
 
 def login(request):
     next_url = '/'
@@ -43,15 +44,42 @@ def logout(request):
 @login_required
 def index(request):
     user = request.user
-    coordinator_roles = user.courseinstance_set.all()
-    auxiliary_roles = user.auxiliary_set.all()
-    assistant_roles = user.assistant_set.all()
-    student_roles = user.student_set.all()
+    
+    roles = RoleList(request.user)
+    
+    if roles.is_empty():
+        return render_to_response('index.html', {
+            'user': user,
+        })
+        
+    return HttpResponseRedirect(roles.get(0).generate_url())
 
-    return render_to_response('index.html', {
-        'user': user,
-        'coordinator_roles': coordinator_roles,
-        'auxiliary_roles': auxiliary_roles,
-        'assistant_roles': assistant_roles,
-        'student_roles': student_roles,
-    })
+@login_required
+def coordinator(request, coordinator_id):
+    roles = RoleList(request.user)
+    roles.set_default(CourseInstance, coordinator_id)
+    return render_to_response('coordinator.html', {'roles': roles})
+    
+@login_required
+def assistant(request, assistant_id):
+    roles = RoleList(request.user)
+    roles.set_default(Assistant, assistant_id)
+    return render_to_response('assistant.html', {'roles': roles})
+    
+@login_required
+def auxiliary(request, auxiliary_id):
+    roles = RoleList(request.user)
+    roles.set_default(Auxiliary, auxiliary_id)
+    return render_to_response('auxiliary.html', {'roles': roles})
+    
+@login_required
+def student(request, student_id):
+    roles = RoleList(request.user)
+    roles.set_default(Student, student_id)
+    return render_to_response('student.html', {'roles': roles})
+    
+def append_roles_to_response(request, template, args):
+    if 'roles' not in args:
+        args['roles'] = get_user_roles(request.user)
+        
+    return render_to_response(template, args)

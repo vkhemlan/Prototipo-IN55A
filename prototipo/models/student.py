@@ -1,18 +1,21 @@
 #-*- coding: UTF-8 -*-
 from django.db import models
+from django.core.urlresolvers import reverse
 from django.contrib.admin.models import User
 from django.core.exceptions import ValidationError
-from course_instance import CourseInstance
+from common_role_info import CommonRoleInfo
 from group import Group
+from prototipo.models import CourseInstance
 
 '''
 Descripcion de un estudiante en cierta
 instancia del curso
 '''
-class Student(models.Model):
+class Student(CommonRoleInfo):
     person = models.ForeignKey(User)
     course_instance = models.ForeignKey(CourseInstance)
     group = models.ForeignKey(Group, blank = True, null = True)
+    role_name = 'Alumno'
 
     def __unicode__(self):
         return unicode(self.course_instance) + ' - ' + self.person.get_full_name()    
