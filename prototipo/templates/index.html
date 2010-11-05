@@ -1,0 +1,54 @@
+{% extends 'base_generic.html' %}
+
+{% block title %}
+    Selección de cargos
+{% endblock %}
+
+{% block content %}
+    Hola {{ user.get_full_name }}
+
+    <h2>Labores de coordinador</h2>
+    {% if coordinator_roles %}
+        <ul>
+        {% for coordinator_role in coordinator_roles %}
+            <li>{{ coordinator_role }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        No ha tenido labores de coordinador
+    {% endif %}
+    
+    <h2>Labores de ayudante</h2>
+    {% if assistant_roles %}
+        <ul>
+        {% for assistant_role in assistant_roles %}
+            <li>{{ assistant_role.course_instance }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        No ha tenido labores de ayudante
+    {% endif %}
+    
+    <h2>Labores de auxiliar</h2>
+    {% if auxiliary_roles %}
+        <ul>
+        {% for auxiliary_role in auxiliary_roles %}
+            <li>{{ auxiliary_role.course_instance }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        No ha tenido labores de auxiliar
+    {% endif %}
+    
+    <h2>Labores de estudiante</h2>
+    {% if student_roles %}
+        <ul>
+        {% for student_role in student_roles %}
+            <li>{{ student_role.course_instance }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        No ha tenido labores de estudiante
+    {% endif %}
+
+{% endblock %}
