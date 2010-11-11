@@ -24,7 +24,7 @@ class Group(models.Model):
         if not self.auxiliary.course_instance == self.assistant.course_instance == self.leader.course_instance:
             raise ValidationError('El ayudante, auxiliar y líder de equipo deben pertenecer a la misma versión del curso')
             
-        if self.leader.group != self:
+        if self.leader.group and self.leader.group != self:
             raise ValidationError('El líder de grupo debe pertenecer a este equipo')
             
     class Meta:

@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
-from itsense import settings
+import settings
 from forms import *
 from models import *
 from utils import *
