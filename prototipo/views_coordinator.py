@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
@@ -50,7 +51,8 @@ def add_report_description(request, course_instance, coordinator_id):
     if request.method == 'POST':
         form = ReportDescriptionForm(request.POST, request.FILES)
         if form.is_valid():
-            pass
+            report_description = ReportDescription.generate_report(form, course_instance)
+            return HttpResponseRedirect(reverse('prototipo.views_coordinator.report_description', kwargs = {'coordinator_id': coordinator_id}))
     else:
         form = ReportDescriptionForm()
     return render_to_response('coordinator/add_report_description.html', {

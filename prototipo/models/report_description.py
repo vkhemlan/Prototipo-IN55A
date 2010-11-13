@@ -1,4 +1,6 @@
 #-*- coding: UTF-8 -*-
+import os
+import settings
 from django.db import models
 from course_instance import CourseInstance
 
@@ -13,6 +15,36 @@ class ReportDescription(models.Model):
     delivery_end_date = models.DateTimeField()
     feedback_return_date = models.DateTimeField()
     feedback_template_key = models.CharField(max_length = 255)
+    
+    @staticmethod
+    def generate_report(form, course_instance):
+        report = ReportDescription()
+        report.name = form.cleaned_data['name']
+        report.delivery_start_date = form.cleaned_data['delivery_start_date']
+        report.delivery_end_date = form.cleaned_data['delivery_end_date']
+        report.feedback_return_date = form.cleaned_data['feedback_return_date']
+        report.course_instance = course_instance
+        report.feedback_template_key = ''
+        report.save()
+        
+        report.store_file(form.cleaned_data['feedback_template'])
+        
+    def store_file(self, uploaded_file):
+        filename = uploaded_file.name
+        
+        extension_index = filename.rfind('.')
+        if extension_index == -1:
+            raise Exception
+        
+        extension = filename[extension_index:]
+        
+        if extension not in ['.xls', '.xlsx']:
+            raise Exception
+        
+        destination = open(os.path.join(settings.PROJECT_ROOT, 'media/uploaded_templates/%s%s' % (self.id, extension)), 'wb+')
+        for chunk in uploaded_file.chunks():
+            destination.write(chunk)
+        destination.close()
     
     def __unicode__(self):
         return unicode(self.course_instance) + ' - ' + self.name
