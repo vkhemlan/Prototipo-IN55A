@@ -1,7 +1,10 @@
 # Django settings for itsense project.
 
-import os,sys
+import os, sys
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+
+ACCOUNT_EMAIL = 'prototipo.in55a@gmail.com'
+ACCOUNT_PASSWORD = 'prototipo.in55a!'
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

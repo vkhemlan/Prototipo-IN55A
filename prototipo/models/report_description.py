@@ -1,8 +1,11 @@
 #-*- coding: UTF-8 -*-
 import os
 import settings
+from prototipo.utils.functions import get_file_extension, upload_file, get_gdoc_key
 from django.db import models
 from course_instance import CourseInstance
+from prototipo.models import Group
+from report import Report
 
 '''
 Esquema de una entrega, define fechas y el 
@@ -28,20 +31,24 @@ class ReportDescription(models.Model):
         report.save()
         
         report.store_file(form.cleaned_data['feedback_template'])
+        document_url = upload_file(report, str(report.course_instance) + ' - ' + report.name + ' - Feedback Template')
+        report.feedback_template_key = get_gdoc_key(document_url)
+
+        report.save()
+        
+        groups = Group.objects.filter(leader__course_instance = course_instance)
+        for group in groups:
+            Report.generate_report(report, group)
         
     def store_file(self, uploaded_file):
         filename = uploaded_file.name
         
-        extension_index = filename.rfind('.')
-        if extension_index == -1:
+        extension = get_file_extension(filename)
+        
+        if extension != 'XLS':
             raise Exception
         
-        extension = filename[extension_index:]
-        
-        if extension not in ['.xls', '.xlsx']:
-            raise Exception
-        
-        destination = open(os.path.join(settings.PROJECT_ROOT, 'media/uploaded_templates/%s%s' % (self.id, extension)), 'wb+')
+        destination = open(os.path.join(settings.PROJECT_ROOT, 'media/uploaded_templates/%s.xls' % self.id), 'wb+')
         for chunk in uploaded_file.chunks():
             destination.write(chunk)
         destination.close()
