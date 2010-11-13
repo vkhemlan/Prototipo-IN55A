@@ -12,8 +12,6 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-BASE_PATH = '/Users/mak/Projects/universidad/in55a/Prototipo-IN55A/'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
@@ -36,7 +34,7 @@ TIME_ZONE = 'America/Santiago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'es-cl'
+LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
@@ -50,7 +48,7 @@ USE_L10N = True
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = BASE_PATH + 'media/'
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
