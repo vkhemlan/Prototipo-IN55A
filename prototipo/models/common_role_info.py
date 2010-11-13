@@ -11,7 +11,7 @@ class CommonRoleInfo(models.Model):
 
     def generate_url(self):
         view = self.get_view_name()
-        return reverse('prototipo.views.' + view, kwargs = {view + '_id': self.id})
+        return reverse('prototipo.views_' + view + '.index', kwargs = {view + '_id': self.id})
         
     def get_select_text(self):
         return unicode(self.course_instance) + ' - ' + self.role_name

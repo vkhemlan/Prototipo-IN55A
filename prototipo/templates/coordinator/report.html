@@ -1,0 +1,17 @@
+{% extends 'coordinator/base.html' %}
+
+{% block right_content %}
+    <h3>Entregas del curso {{ course_instance }}</h3>
+    
+    {% if reports %}
+        <ul>
+            {% for report in reports %}
+                <li>{{ report }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay entregas definidas</p>
+    {% endif %}
+    
+    <a href="{% url prototipo.views_coordinator.add_report_description course_instance.id %}">Definir nueva entrega</a>
+{% endblock %}

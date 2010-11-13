@@ -55,12 +55,6 @@ def index(request):
     return HttpResponseRedirect(roles.get(0).generate_url())
 
 @login_required
-def coordinator(request, coordinator_id):
-    roles = RoleList(request.user)
-    roles.set_default(CourseInstance, coordinator_id)
-    return render_to_response('coordinator.html', {'roles': roles})
-    
-@login_required
 def assistant(request, assistant_id):
     roles = RoleList(request.user)
     roles.set_default(Assistant, assistant_id)
@@ -77,9 +71,3 @@ def student(request, student_id):
     roles = RoleList(request.user)
     roles.set_default(Student, student_id)
     return render_to_response('student.html', {'roles': roles})
-    
-def append_roles_to_response(request, template, args):
-    if 'roles' not in args:
-        args['roles'] = get_user_roles(request.user)
-        
-    return render_to_response(template, args)
