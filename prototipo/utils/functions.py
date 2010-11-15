@@ -8,10 +8,25 @@ import gdata.spreadsheet.service
 from urlparse import urlparse
 
 def get_file_extension(file_name):
-    match = re.search('.*\.([a-zA-Z]{3,}$)', file_name)
+    match = re.search('\.[^.]*$', file_name)
     if match:
-        return match.group(1).upper()
-    return False
+        return match.group(1).lower()
+    raise Exception
+
+def store_file(uploaded_file, folder, store_filename, whitelist):
+        filename = uploaded_file.name
+        
+        (file_name, extension) = os.path.splitext(filename)        
+
+        extension = extension.lower()
+            
+        if extension not in whitelist:
+            raise Exception
+        
+        destination = open(os.path.join(settings.PROJECT_ROOT, 'media/%s/%s%s' % (folder, store_filename, extension)), 'wb+')
+        for chunk in uploaded_file.chunks():
+            destination.write(chunk)
+        destination.close()
     
 def upload_file(description, title):
     file_path = os.path.join(settings.PROJECT_ROOT, 'media/uploaded_templates/%s.xls' % description.id)

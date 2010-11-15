@@ -19,6 +19,10 @@ class Group(models.Model):
     
     def __unicode__(self):
         return self.name
+
+    @property
+    def coordinator(self):
+        return self.leader.course_instance.coordinator
     
     def clean(self):
         if not self.auxiliary.course_instance == self.assistant.course_instance == self.leader.course_instance:

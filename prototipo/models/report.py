@@ -1,7 +1,7 @@
 #-*- coding: UTF-8 -*-
 from django.db import models
 from group import Group
-from prototipo.utils.functions import get_file_extension, upload_file, get_gdoc_key
+from prototipo.utils.functions import get_file_extension, upload_file, get_gdoc_key, store_file
 import gdata.docs.service
 import gdata.docs.data
 import gdata.docs.client
@@ -34,13 +34,20 @@ class Report(models.Model):
         report.feedback_key = get_gdoc_key(document_url)
         report.share_with_assistant()
         report.share_with_auxiliary()
+        report.share_with_coordinator()
         report.save()
+
+    def store_file(self, uploaded_file):
+        store_file(uploaded_file, 'uploaded_reports', self.id, ['.zip'])
         
     def share_with_assistant(self):
         self.share('writer', self.group.assistant.person.email)
         
     def share_with_auxiliary(self):
         self.share('reader', self.group.auxiliary.person.email)
+
+    def share_with_coordinator(self):
+        self.share('writer', self.group.coordinator.email)
         
     def share(self, permissions, email):
         gd_client = gdata.docs.service.DocsService()

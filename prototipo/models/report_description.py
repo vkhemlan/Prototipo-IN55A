@@ -1,7 +1,7 @@
 #-*- coding: UTF-8 -*-
 import os
 import settings
-from prototipo.utils.functions import get_file_extension, upload_file, get_gdoc_key
+from prototipo.utils.functions import get_file_extension, upload_file, get_gdoc_key, store_file
 from django.db import models
 from course_instance import CourseInstance
 from prototipo.models import Group
@@ -41,17 +41,7 @@ class ReportDescription(models.Model):
             Report.generate_report(report, group)
         
     def store_file(self, uploaded_file):
-        filename = uploaded_file.name
-        
-        extension = get_file_extension(filename)
-        
-        if extension != 'XLS':
-            raise Exception
-        
-        destination = open(os.path.join(settings.PROJECT_ROOT, 'media/uploaded_templates/%s.xls' % self.id), 'wb+')
-        for chunk in uploaded_file.chunks():
-            destination.write(chunk)
-        destination.close()
+        store_file(uploaded_file, 'uploaded_templates', self.id, ['.xls'])
     
     def __unicode__(self):
         return unicode(self.course_instance) + ' - ' + self.name

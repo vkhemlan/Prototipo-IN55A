@@ -1,0 +1,13 @@
+{% extends 'base_account.html' %}
+
+{% block body %}
+    <div class="left_menu">
+        <ul>
+            <li><a href="{% url prototipo.views_group.index group.id %}">Inicio</a></li>
+            <li>Mensajes</li> 
+            <li><a href="{% url prototipo.views_group.report group.id %}">Entregas</a></li> 
+        </ul>
+    </div>    
+    {% block right_content %}
+    {% endblock %}
+{% endblock %}

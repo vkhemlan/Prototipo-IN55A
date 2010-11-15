@@ -17,6 +17,13 @@ class Student(CommonRoleInfo):
     group = models.ForeignKey(Group, blank = True, null = True)
     role_name = 'Alumno'
 
+    def get_view_name(self):
+        return 'group'
+
+    def generate_url(self):
+        view = self.get_view_name()
+        return reverse('prototipo.views_' + view + '.index', kwargs = {view + '_id': self.group.id})
+
     def __unicode__(self):
         return unicode(self.course_instance) + ' - ' + self.person.get_full_name()    
         

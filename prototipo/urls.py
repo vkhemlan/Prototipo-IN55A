@@ -14,3 +14,14 @@ urlpatterns += patterns('prototipo.views_coordinator',
     (r'^coordinator/(?P<coordinator_id>\d+)/report_description$', 'report_description'),
     (r'^coordinator/(?P<coordinator_id>\d+)/report_description/add$', 'add_report_description')
 ) 
+
+urlpatterns += patterns('prototipo.views_group',
+    (r'^group/(?P<group_id>\d+)/$', 'index'),
+    (r'^group/(?P<group_id>\d+)/report$', 'report'),
+    (r'^group/(?P<group_id>\d+)/report/(?P<report_id>\d+)/deliver$', 'deliver_report'),
+)
+
+urlpatterns += patterns('prototipo.views_assistant',
+    (r'^assistant/(?P<assistant_id>\d+)$', 'index'),
+    (r'^assistant/(?P<assistant_id>\d+)/report$', 'report'),
+)

@@ -1,0 +1,23 @@
+{% extends 'assistant/base.html' %}
+
+{% block right_content %}
+    <h3>Entregas</h3>
+    
+    {% if report_descriptions %}
+        <ul>
+        {% for report_description in report_descriptions %}
+            {% if report_description.reports %}
+                <li>{{ report_description }}
+                <ul>
+                    {% for report in report_description.reports %}
+                        <li>{{ report }} (<a href=""></a>)</li>
+                    {% endfor %}                        
+                </ul>
+                </li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay entregas</p>
+    {% endif %}
+{% endblock %}

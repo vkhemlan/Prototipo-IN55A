@@ -15,6 +15,8 @@
                 <option value="{{ role.generate_url }}" {% if role.selected %}selected="selected"{% endif %}>{{ role.get_select_text }}</option>
             {% endfor %}
         </select>
+
+        <a href="{% url prototipo.views.logout %}">Logout</a>
     </div>
     {% block body %} {% endblock %}
 {% endblock %}
