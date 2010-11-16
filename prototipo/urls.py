@@ -26,3 +26,10 @@ urlpatterns += patterns('prototipo.views_assistant',
     (r'^assistant/(?P<assistant_id>\d+)/report$', 'report'),
     (r'^assistant/(?P<assistant_id>\d+)/report/(?P<report_id>\d+)/mark_as_corrected$', 'mark_as_corrected'),
 )
+
+urlpatterns += patterns('prototipo.views_auxiliary',
+    (r'^auxiliary/(?P<auxiliary_id>\d+)$', 'index'),
+    (r'^auxiliary/(?P<auxiliary_id>\d+)/report$', 'report'),
+    (r'^auxiliary/(?P<auxiliary_id>\d+)/report/(?P<report_id>\d+)/unmark_as_corrected$', 'unmark_as_corrected'),
+    (r'^auxiliary/(?P<auxiliary_id>\d+)/report/(?P<report_id>\d+)/mark_as_validated$', 'mark_as_validated'),
+)
