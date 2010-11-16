@@ -32,12 +32,7 @@ def upload_file(description, title):
     file_path = os.path.join(settings.PROJECT_ROOT, 'media/uploaded_templates/%s.xls' % description.id)
 
     file_name = os.path.basename(file_path)
-    ext = get_file_extension(file_name)
-
-    if not ext or ext not in gdata.docs.service.SUPPORTED_FILETYPES:
-        raise Exception
-    else:
-        content_type = gdata.docs.service.SUPPORTED_FILETYPES[ext]
+    content_type = gdata.docs.service.SUPPORTED_FILETYPES['XLS']
 
     try:
         ms = gdata.MediaSource(file_path=file_path, content_type=content_type)

@@ -27,7 +27,7 @@ def assistant_login_required(f):
 @assistant_login_required
 def index(request, assistant):
     roles = RoleList(request.user)
-    roles.set_default(CourseInstance, assistant.id)
+    roles.set_default(Assistant, assistant.id)
     return render_to_response('assistant/index.html', {
         'roles': roles,
         'assistant': assistant
@@ -36,7 +36,7 @@ def index(request, assistant):
 @assistant_login_required
 def report(request, assistant):
     roles = RoleList(request.user)
-    roles.set_default(CourseInstance, assistant.id)
+    roles.set_default(Assistant, assistant.id)
     report_descriptions = ReportDescription.objects.all()
     for report_description in report_descriptions:
         report_description.reports = Report.objects.filter(description = report_description).filter(group__assistant = assistant)
