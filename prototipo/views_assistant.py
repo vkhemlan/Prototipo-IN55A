@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.core.urlresolvers import reverse
 from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
@@ -5,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth
 from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
+from django.core.urlresolvers import reverse
 import settings
 from forms import *
 from models import *
@@ -45,3 +47,15 @@ def report(request, assistant):
         'assistant': assistant,
         'report_descriptions': report_descriptions,
     })
+    
+@assistant_login_required
+def mark_as_corrected(request, assistant, report_id):
+    report = Report.objects.get(pk = report_id)
+    if report.group.assistant != assistant:
+        raise Exception
+    if not report.first_correction_date:
+        report.first_correction_date = datetime.now()
+    report.corrected = True
+    report.save()
+    url = reverse('prototipo.views_assistant.report', kwargs = {'assistant_id': assistant.id})
+    return HttpResponseRedirect(url)

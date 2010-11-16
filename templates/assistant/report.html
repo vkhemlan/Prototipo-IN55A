@@ -10,7 +10,10 @@
                 <li>{{ report_description.name }}
                 <ul>
                     {% for report in report_description.reports %}
-                        <li>{{ report.group.name }} (<a href="https://spreadsheets.google.com/ccc?key={{report.feedback_key}}">Ver documento de feedback</a> / <a href="">Descargar entrega</a> / {% if not report.corrected %}<a href="">Marcar como corregido</a>{% endif %})</li>
+                        <li>{{ report.group.name }} (
+                        <a href="https://spreadsheets.google.com/ccc?key={{report.feedback_key}}">Ver documento de feedback</a> / 
+                        {% if report.last_delivery_date %}<a href="/site_media/uploaded_reports/{{report.id}}.zip">Descargar entrega</a> / {% endif %}
+                        {% if not report.corrected %}<a href="{% url prototipo.views_assistant.mark_as_corrected assistant.id report.id %}">Marcar como corregido</a>{% endif %})</li>
                     {% endfor %}                        
                 </ul>
                 </li>

@@ -24,4 +24,5 @@ urlpatterns += patterns('prototipo.views_group',
 urlpatterns += patterns('prototipo.views_assistant',
     (r'^assistant/(?P<assistant_id>\d+)$', 'index'),
     (r'^assistant/(?P<assistant_id>\d+)/report$', 'report'),
+    (r'^assistant/(?P<assistant_id>\d+)/report/(?P<report_id>\d+)/mark_as_corrected$', 'mark_as_corrected'),
 )
