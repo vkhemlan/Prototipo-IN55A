@@ -6,7 +6,7 @@
     {% if past_reports %}
         <ul>
             {% for report in past_reports %}
-                <li>{{ report.des }}</li>
+                <li>{{ report.des }} {% if report.delivered %}<a href="/site_media/uploaded_reports/{{report.id}}.zip">Descargar Entrega</a>{% else %} Entrega no realizada{% endif %}</li>
             {% endfor %}
         </ul>
     {% else %}
