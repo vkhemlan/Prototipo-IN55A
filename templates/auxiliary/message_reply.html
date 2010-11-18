@@ -1,0 +1,11 @@
+{% extends 'auxiliary/base.html' %}
+
+{% block right_content %}
+    <h3>Responder a {{ message_ring }}</h3>
+    
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ message_reply_form.as_p }}
+        <input type="submit" value="Enviar respuesta" />
+    </form>
+{% endblock %}

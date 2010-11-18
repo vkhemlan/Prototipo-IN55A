@@ -82,3 +82,83 @@ def deliver_report(request, group, report_id):
         'group': group,
         'report_delivery_form': form,
     }, context_instance = RequestContext(request))
+    
+@group_login_required
+def message(request, group):
+    roles = RoleList(request.user)
+    roles.set_default(Student, group.id)
+    message_rings = MessageRing.objects.filter(group = group).filter(include_group = True)
+        
+    return render_to_response('group/message.html', {
+        'group': group,
+        'roles': roles,        
+        'message_rings': message_rings,
+    })
+
+@group_login_required
+def message_details(request, group, message_ring_id):
+    roles = RoleList(request.user)
+    roles.set_default(Student, group.id)
+    message_ring = MessageRing.objects.get(pk = message_ring_id)
+    messages = message_ring.message_set.all().order_by('date')
+    
+    return render_to_response('group/message_details.html', {
+        'group': group,
+        'roles': roles,        
+        'messages': messages,
+        'message_ring': message_ring,
+    })
+
+@group_login_required
+def message_add(request, group):
+    roles = RoleList(request.user)
+    roles.set_default(Student, group.id)
+    
+    if request.method == 'POST':
+        form = StudentMessageRingForm(request.POST)
+        if form.is_valid():
+            message_ring = MessageRing()
+            message_ring.group = group
+            message_ring.category = form.cleaned_data['category']
+            message_ring.include_coordinator = form.cleaned_data['include_coordinator']
+            message_ring.include_assistant_and_auxiliary = form.cleaned_data['include_assistant_and_auxiliary']
+            message_ring.include_group = True
+            message_ring.title = form.cleaned_data['title']
+            message_ring.save()
+        
+            message = Message()
+            message.ring = message_ring
+            message.body = form.cleaned_data['body']
+            message.remitent = request.user
+            message.save()
+            return HttpResponseRedirect(reverse('prototipo.views_group.message', kwargs = {'group_id': group.id}))
+    else:
+        form = StudentMessageRingForm()
+        
+    return render_to_response('group/message_add.html', {
+        'roles': roles,
+        'group': group,
+        'form': form,
+    }, context_instance = RequestContext(request))
+    
+@group_login_required
+def message_reply(request, group, message_ring_id):
+    roles = RoleList(request.user)
+    roles.set_default(Student, group.id)
+    
+    if request.method == 'POST':
+        form = MessageReplyForm(request.POST)
+        if form.is_valid():
+            message = Message()
+            message.ring = MessageRing.objects.get(pk = message_ring_id)
+            message.body = form.cleaned_data['body']
+            message.remitent = request.user
+            message.save()
+            return HttpResponseRedirect(reverse('prototipo.views_group.message_details', kwargs = {'group_id': group.id, 'message_ring_id': message_ring_id}))
+    else:
+        form = MessageReplyForm()
+    return render_to_response('group/message_reply.html', {
+        'roles': roles,
+        'group': group,
+        'message_reply_form': form,
+    }, context_instance = RequestContext(request))

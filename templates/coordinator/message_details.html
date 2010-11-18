@@ -1,0 +1,20 @@
+{% extends 'coordinator/base.html' %}
+
+{% block right_content %}
+    <h3>Mensajes de {{ message_ring }}</h3>
+    
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li><b>{{ message.remitent.get_full_name }}</b>
+                <br />
+                {{ message.body }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay mensajes</p>
+    {% endif %}
+    
+    <a href="{% url prototipo.views_coordinator.message_reply course_instance.id message_ring.id %}">Responder</a>
+{% endblock %}
