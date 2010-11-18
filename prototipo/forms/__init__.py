@@ -1,7 +1,6 @@
 from login_form import LoginForm
 from report_description_form import ReportDescriptionForm
 from report_delivery_form import ReportDeliveryForm
-from message_ring_form import MessageRingForm
 from coordinator_message_ring_form import CoordinatorMessageRingForm
 from student_message_ring_form import StudentMessageRingForm
 from assistant_auxiliary_message_ring_form import AssistantAuxiliaryMessageRingForm
