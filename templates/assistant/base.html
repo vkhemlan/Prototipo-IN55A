@@ -1,13 +1,14 @@
 {% extends 'base_account.html' %}
+{% block username %}
+	{{assistant.person.get_full_name}}
+{% endblock %}
+{% block navigation %}
+	<li><a href="{% url prototipo.views_assistant.index assistant.id %}">Inicio</a></li>
+	<li><a href="{% url prototipo.views_assistant.message assistant.id %}">Mensajes</a></li> 
+	<li><a href="{% url prototipo.views_assistant.report assistant.id %}">Entregas</a></li>
+{% endblock %}
 
-{% block body %}
-    <div class="left_menu">
-        <ul>
-            <li><a href="{% url prototipo.views_assistant.index assistant.id %}">Inicio</a></li>
-            <li><a href="{% url prototipo.views_assistant.message assistant.id %}">Mensajes</a></li> 
-            <li><a href="{% url prototipo.views_assistant.report assistant.id %}">Entregas</a></li> 
-        </ul>
-    </div>    
+{% block body %} 
     {% block right_content %}
     {% endblock %}
 {% endblock %}

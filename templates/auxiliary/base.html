@@ -1,13 +1,13 @@
 {% extends 'base_account.html' %}
-
-{% block body %}
-    <div class="left_menu">
-        <ul>
-            <li><a href="{% url prototipo.views_auxiliary.index auxiliary.id %}">Inicio</a></li>
-            <li><a href="{% url prototipo.views_auxiliary.message auxiliary.id %}">Mensajes</a></li>
-            <li><a href="{% url prototipo.views_auxiliary.report auxiliary.id %}">Entregas</a></li> 
-        </ul>
-    </div>    
+{% block username %}
+	{{auxiliary.person.get_full_name}}
+{% endblock %}
+{% block navigation %}
+	<li><a href="{% url prototipo.views_auxiliary.index auxiliary.id %}">Inicio</a></li>
+	<li><a href="{% url prototipo.views_auxiliary.message auxiliary.id %}">Mensajes</a></li>
+	<li><a href="{% url prototipo.views_auxiliary.report auxiliary.id %}">Entregas</a></li> 
+{% endblock %}
+{% block body %} 
     {% block right_content %}
     {% endblock %}
 {% endblock %}

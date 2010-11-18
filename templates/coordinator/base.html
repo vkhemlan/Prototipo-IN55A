@@ -1,13 +1,14 @@
 {% extends 'base_account.html' %}
-
-{% block body %}
-    <div class="left_menu">
-        <ul>
-            <li><a href="{% url prototipo.views_coordinator.index course_instance.id %}">Inicio</a></li>
-            <li><a href="{% url prototipo.views_coordinator.message course_instance.id %}">Mensajes</a></li> 
-            <li><a href="{% url prototipo.views_coordinator.report_description course_instance.id %}">Entregas</a></li> 
-        </ul>
-    </div>    
+{% block username %}
+	{{course_instance.coordinator.get_full_name}}
+{% endblock %}
+{% block navigation %}
+	<li><a href="{% url prototipo.views_coordinator.index course_instance.id %}">Inicio</a></li>
+    <li><a href="{% url prototipo.views_coordinator.message course_instance.id %}">Mensajes</a></li> 
+    <li><a href="{% url prototipo.views_coordinator.report_description course_instance.id %}">Entregas</a></li>
+{% endblock %}
+    
+{% block body %}   
     {% block right_content %}
     {% endblock %}
 {% endblock %}
