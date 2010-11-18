@@ -7,16 +7,49 @@
     <script type="text/javascript" src="/site_media/js/account.js"></script>
     <link type="text/css" href="/site_media/css/jquery-ui-1.8.6.custom.css" rel="stylesheet" />
 {% endblock %}
-
+{% block logout %}
+<span class="text-separator">|</span><a href="{% url prototipo.views.logout %}">  Logout</a>
+{% endblock %}
 {% block content %}
-    <div class="course_instance_selection_div">
-        <select id="course_instance_selection">
-            {% for role in roles %}
-                <option value="{{ role.generate_url }}" {% if role.selected %}selected="selected"{% endif %}>{{ role.get_select_text }}</option>
-            {% endfor %}
-        </select>
+<div id="navigation-wrapper">
+	<div id="navigation-wrapper-2">
+		<div class="center-wrapper">
+	
+			<div id="navigation">
 
-        <a href="{% url prototipo.views.logout %}">Logout</a>
-    </div>
-    {% block body %} {% endblock %}
+				<ul class="tabbed">
+					{% block navigation %}{% endblock %}
+					
+					<li>
+						<select id="course_instance_selection">
+							{% for role in roles %}
+								<option value="{{ role.generate_url }}" {% if role.selected %}selected="selected"{% endif %}>{{ role.get_select_text }}</option>
+							{% endfor %}
+						</select>
+					</li>
+				</ul>
+
+				<div class="clearer">&nbsp;</div>
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div id="content-wrapper">
+	<div class="center-wrapper">
+		
+		<div class="content">
+
+			<div id="main">
+
+				{% block body %} {% endblock %}
+
+			</div>
+
+		</div>
+
+	</div>
+</div>
 {% endblock %}
