@@ -1,0 +1,15 @@
+{% extends 'coordinator/base.html' %}
+
+{% block right_content %}
+    <h3>Indicadores del curso {{ course_instance }}</h3>
+
+    {% if indicators %}
+        <ul>
+            {% for indicator in indicators %}
+                <li><b>{{ indicator.0 }}:</b> {{ indicator.1 }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay indicadores disponibles</p>
+    {% endif %}
+{% endblock %}

@@ -17,7 +17,8 @@ urlpatterns += patterns('prototipo.views_coordinator',
     (r'^coordinator/(?P<coordinator_id>\d+)/message/(?P<message_ring_id>\d+)$', 'message_details'),
     (r'^coordinator/(?P<coordinator_id>\d+)/message/(?P<message_ring_id>\d+)/reply$', 'message_reply'),
     (r'^coordinator/(?P<coordinator_id>\d+)/message/add$', 'message_add'),
-) 
+    (r'^coordinator/(?P<coordinator_id>\d+)/indicators$', 'indicators'),
+)
 
 urlpatterns += patterns('prototipo.views_group',
     (r'^group/(?P<group_id>\d+)/$', 'index'),
