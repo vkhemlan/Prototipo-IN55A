@@ -9,6 +9,7 @@ import settings
 from forms import *
 from models import *
 from utils import *
+from utils.functions import *
 
 def coordinator_login_required(f):
     def wrap(request, *args, **kwargs):
@@ -113,6 +114,9 @@ def message_add(request, course_instance, coordinator_id):
             message.body = form.cleaned_data['body']
             message.remitent = request.user
             message.save()
+            
+            send_notification_mails(message_ring)
+            
             return HttpResponseRedirect(reverse('prototipo.views_coordinator.message', kwargs = {'coordinator_id': coordinator_id}))
     else:
         form = CoordinatorMessageRingForm.create_form(course_instance)
@@ -136,6 +140,9 @@ def message_reply(request, course_instance, coordinator_id, message_ring_id):
             message.body = form.cleaned_data['body']
             message.remitent = request.user
             message.save()
+            
+            send_notification_mails(message.ring)            
+            
             return HttpResponseRedirect(reverse('prototipo.views_coordinator.message_details', kwargs = {'coordinator_id': coordinator_id, 'message_ring_id': message_ring_id}))
     else:
         form = MessageReplyForm()
@@ -144,3 +151,12 @@ def message_reply(request, course_instance, coordinator_id, message_ring_id):
         'course_instance': course_instance,
         'message_reply_form': form,
     }, context_instance = RequestContext(request))
+    
+def send_notification_mails(message_ring):
+    if message_ring.include_group:
+        group = message_ring.group
+        for student in group.student_set.all():
+            send_new_message_mail(student.person)
+    if message_ring.include_assistant_and_auxiliary:
+        send_new_message_mail(group.assistant.person)
+        send_new_message_mail(group.auxiliary.person)

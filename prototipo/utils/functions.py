@@ -6,6 +6,11 @@ import gdata.docs.data
 import gdata.docs.client
 import gdata.spreadsheet.service
 from urlparse import urlparse
+from django.db.models import Min, Max
+from django.core.mail import send_mail
+from django.template import Context
+from django.template.loader import get_template
+
 
 def get_file_extension(file_name):
     match = re.search('\.[^.]*$', file_name)
@@ -50,3 +55,19 @@ def upload_file(description, title):
       
 def get_gdoc_key(url):
     return dict([e.split('=') for e in urlparse(url).query.split('&')])['key'] 
+    
+def send_email(user, subject, template, args = {}):
+    args['user'] = user
+    body = template.render(Context(args))
+    if user.email:
+        send_mail(subject, body, settings.ACCOUNT_EMAIL, [ user.username + '<' + user.email + '>' ])
+
+def send_new_message_mail(user):
+    subject = 'Nuevo mensaje en el sistema de SIA'
+
+    t = get_template('email/new_message.html')
+
+    send_email(user, subject, t)
+    
+def generate_crontab():
+    rds = ReportDescription.objects.all()

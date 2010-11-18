@@ -6,6 +6,12 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 ACCOUNT_EMAIL = 'prototipo.in55a@gmail.com'
 ACCOUNT_PASSWORD = 'prototipo.in55a!'
 
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = ACCOUNT_EMAIL
+EMAIL_HOST_PASSWORD = ACCOUNT_PASSWORD
+EMAIL_USE_TLS = True
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 

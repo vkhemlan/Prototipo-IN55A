@@ -10,6 +10,7 @@ import settings
 from forms import *
 from models import *
 from utils import *
+from utils.functions import *
 
 def group_login_required(f):
     def wrap(request, *args, **kwargs):
@@ -131,6 +132,9 @@ def message_add(request, group):
             message.body = form.cleaned_data['body']
             message.remitent = request.user
             message.save()
+            
+            send_notification_mails(group, message_ring)
+            
             return HttpResponseRedirect(reverse('prototipo.views_group.message', kwargs = {'group_id': group.id}))
     else:
         form = StudentMessageRingForm()
@@ -154,6 +158,9 @@ def message_reply(request, group, message_ring_id):
             message.body = form.cleaned_data['body']
             message.remitent = request.user
             message.save()
+            
+            send_notification_mails(group, message.ring)
+            
             return HttpResponseRedirect(reverse('prototipo.views_group.message_details', kwargs = {'group_id': group.id, 'message_ring_id': message_ring_id}))
     else:
         form = MessageReplyForm()
@@ -162,3 +169,13 @@ def message_reply(request, group, message_ring_id):
         'group': group,
         'message_reply_form': form,
     }, context_instance = RequestContext(request))
+    
+def send_notification_mails(group, message_ring):
+    for student in group.student_set.all():
+        send_new_message_mail(student.person)
+        
+    if message_ring.include_assistant_and_auxiliary:
+        send_new_message_mail(group.assistant.person)
+        send_new_message_mail(group.auxiliary.person)
+    if message_ring.include_coordinator:
+        send_new_message_mail(group.leader.course_instance.coordinator)
