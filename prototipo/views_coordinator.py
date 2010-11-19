@@ -219,6 +219,14 @@ def indicators(request, course_instance, coordinator_id):
         indicators.append((indicator_descriptor, average_days))
 
     # porcentaje_informes_entregados
+    reports = Report.objects.filter(description__course_instance = course_instance)
+    reports_count = reports.count()
+    reports_not_delivered_count = reports.filter(last_delivery_date__isnull = True).count()
+    group_count = Group.objects.filter(leader__course_instance = course_instance).count()
+    delivered_report_percentage = 100.0 * (reports_count - reports_not_delivered_count) / reports_count
+    indicator_descriptor = u'Porcentaje de informes entregados'
+    delivered_report_percentage = "{0}%".format(delivered_report_percentage)
+    indicators.append((indicator_descriptor, delivered_report_percentage))
 
     # porcentaje_observaciones_entregadas
 
