@@ -199,16 +199,38 @@ def indicators(request, course_instance, coordinator_id):
             total_days += time_delta.days
         average_days = 1.0 * total_days / (reports.count() or 1) # la cantidad de dias promedio
         average_days = u"{0} día(s)".format(average_days)
-        indicator_descriptor = u'Tiempo de revisión total promedio de {}'.format(assistant.person.get_full_name())
+        indicator_descriptor = u'Tiempo de revisión total promedio de {0}'.format(assistant.person.get_full_name())
         indicators.append((indicator_descriptor, average_days))
 
     # tiempo_revision_auxiliar_promedio
-
-    # numero_mensajes_enviados
+    auxiliaries = Auxiliary.objects.filter(course_instance = course_instance)
+    for auxiliary in auxiliaries:
+        auxiliary_reports = Report.objects.filter(group__auxiliary = auxiliary).filter(first_correction_date__isnull = False)
+        total_days = 0 # el tiempo total en días
+        for report in auxiliary_reports:
+            if report.validation_date is None:
+                time_delta = now - report.description.feedback_return_date
+            else:
+                time_delta = report.validation_date - report.description.feedback_return_date
+            total_days += time_delta.days
+        average_days = 1.0 * total_days / (reports.count() or 1) # la cantidad de dias promedio
+        average_days = u"{0} día(s)".format(average_days)
+        indicator_descriptor = u'Tiempo de revisión de feedback total promedio de {0}'.format(auxiliary.person.get_full_name())
+        indicators.append((indicator_descriptor, average_days))
 
     # porcentaje_informes_entregados
 
     # porcentaje_observaciones_entregadas
+
+    # numero_mensajes_enviados_por_grupo
+    groups = Group.objects.filter(leader__course_instance = course_instance)
+    for group in groups:
+        message_count = Message.objects.filter(ring__group = group).count()
+        indicator_descriptor = u'Cantidad de mensajes relacionados con el grupo {0}'.format(group.name)
+        message_count = u"{0} mensaje(s)".format(message_count)
+        indicators.append((indicator_descriptor, message_count))
+
+
     return render_to_response('coordinator/indicators.html', {
         'roles': roles,
         'course_instance': course_instance,
