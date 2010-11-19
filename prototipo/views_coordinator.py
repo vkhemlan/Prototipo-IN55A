@@ -183,10 +183,24 @@ def indicators(request, course_instance, coordinator_id):
         total_days += time_delta.days
     average_days = 1.0 * total_days / (reports.count() or 1) # la cantidad de dias promedio
     average_days = u"{0} día(s)".format(average_days)
-    indicators.append((u'Tiempo de revisión total promedio', average_days))
-    print indicators
+    indicator_descriptor = u'Tiempo de revisión total promedio'
+    indicators.append((indicator_descriptor, average_days))
 
     # tiempo_revision_ayudante_promedio
+    assistants = Assistant.objects.filter(course_instance = course_instance)
+    for assistant in assistants:
+        assistant_reports = Report.objects.filter(group__assistant = assistant).filter(last_delivery_date__isnull = False)
+        total_days = 0 # el tiempo total en días
+        for report in assistant_reports:
+            if report.first_correction_date is None:
+                time_delta = now - report.description.delivery_end_date
+            else:
+                time_delta = report.first_correction_date - report.description.delivery_end_date
+            total_days += time_delta.days
+        average_days = 1.0 * total_days / (reports.count() or 1) # la cantidad de dias promedio
+        average_days = u"{0} día(s)".format(average_days)
+        indicator_descriptor = u'Tiempo de revisión total promedio de {}'.format(assistant.person.get_full_name())
+        indicators.append((indicator_descriptor, average_days))
 
     # tiempo_revision_auxiliar_promedio
 
