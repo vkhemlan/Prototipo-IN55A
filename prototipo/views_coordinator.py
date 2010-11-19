@@ -222,13 +222,19 @@ def indicators(request, course_instance, coordinator_id):
     reports = Report.objects.filter(description__course_instance = course_instance)
     reports_count = reports.count()
     reports_not_delivered_count = reports.filter(last_delivery_date__isnull = True).count()
+    reports_delivered_count = reports_count - reports_not_delivered_count
     group_count = Group.objects.filter(leader__course_instance = course_instance).count()
-    delivered_report_percentage = 100.0 * (reports_count - reports_not_delivered_count) / reports_count
+    delivered_report_percentage = 100.0 * reports_delivered_count / reports_count
     indicator_descriptor = u'Porcentaje de informes entregados'
-    delivered_report_percentage = "{0}%".format(delivered_report_percentage)
+    delivered_report_percentage = u'{0}%'.format(delivered_report_percentage)
     indicators.append((indicator_descriptor, delivered_report_percentage))
 
     # porcentaje_observaciones_entregadas
+    reports_feedbacks_count = Report.objects.filter(description__course_instance = course_instance).filter(validation_date__isnull = False).count()
+    indicator_descriptor = u'Porcentaje de observaciones entregadas'
+    reports_feedback_percentage = 100.0 * reports_feedbacks_count / reports_delivered_count
+    reports_feedback_percentage = u'{0}%'.format(reports_feedback_percentage)
+    indicators.append((indicator_descriptor, reports_feedback_percentage))
 
     # numero_mensajes_enviados_por_grupo
     groups = Group.objects.filter(leader__course_instance = course_instance)
