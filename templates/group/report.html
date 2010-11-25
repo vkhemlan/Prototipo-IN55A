@@ -18,7 +18,7 @@
     {% if current_reports %}
         <ul>
             {% for report in current_reports %}
-                <li>{{ report.description }} {% if report.delivered %}<a href="/site_media/uploaded_reports/{{report.id}}.zip">Descargar Entrega</a><a href="{% url prototipo.views_group.deliver_report group.id report.id %}">Realizar Nueva Entrega</a>
+                <li>{{ report.description }} {% if report.delivered %}<a href="/site_media/uploaded_reports/{{report.id}}.zip">Descargar Entrega</a> <a href="{% url prototipo.views_group.deliver_report group.id report.id %}">Realizar Nueva Entrega</a>
     {% else %}<a href="{% url prototipo.views_group.deliver_report group.id report.id %}">Entregar</a>{% endif %}</li>
             {% endfor %}
         </ul>

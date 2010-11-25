@@ -13,6 +13,8 @@ from forms import *
 from models import *
 from utils import *
 from utils.functions import *
+import settings
+
 
 def coordinator_login_required(f):
     def wrap(request, *args, **kwargs):
@@ -163,6 +165,50 @@ def send_notification_mails(message_ring):
     if message_ring.include_assistant_and_auxiliary:
         send_new_message_mail(group.assistant.person)
         send_new_message_mail(group.auxiliary.person)
+        
+def generate_bar_chart(data, ide, title):
+    # Ver si el computador está ocupando un sistema operativo nena o de verdad
+    try:
+        import cairo
+        import pycha.bar
+    except:
+        # Sistema operativo nena detected
+        return
+        
+    # Ya que estamos en GNU/Linux podemos trabajar como la gente
+    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, 400, 400)
+
+    dataSet = (
+        ('Días', [(i, l[1]) for i, l in enumerate(data)]),
+        )
+
+    options = {
+        'axis': {
+            'x': {
+                'ticks': [dict(v=i, label=l[0]) for i, l in enumerate(data)],
+            },
+            'y': {
+                'tickCount': 4,
+                'rotate': 25,
+                'label': 'Lines'
+            }
+        },
+        'colorScheme': {
+            'name': 'gradient',
+            'args': {
+                'initialColor': '#B06625',
+            },
+        },
+
+        'title': title
+    }
+    chart = pycha.bar.VerticalBarChart(surface, options)
+
+    chart.addDataset(dataSet)
+    chart.render()
+
+    location = settings.PROJECT_ROOT + '/media/charts/' + str(ide) + '.png'
+    surface.write_to_png(location)
 
 @coordinator_login_required
 def indicators(request, course_instance, coordinator_id):
@@ -187,7 +233,10 @@ def indicators(request, course_instance, coordinator_id):
     indicators.append((indicator_descriptor, average_days))
 
     # tiempo_revision_ayudante_promedio
+    
+    
     assistants = Assistant.objects.filter(course_instance = course_instance)
+    chart_data = []
     for assistant in assistants:
         assistant_reports = Report.objects.filter(group__assistant = assistant).filter(last_delivery_date__isnull = False)
         total_days = 0 # el tiempo total en días
@@ -198,12 +247,15 @@ def indicators(request, course_instance, coordinator_id):
                 time_delta = report.first_correction_date - report.description.delivery_end_date
             total_days += time_delta.days
         average_days = 1.0 * total_days / (reports.count() or 1) # la cantidad de dias promedio
-        average_days = u"{0} día(s)".format(average_days)
+        s_average_days = u"{0} día(s)".format(average_days)
         indicator_descriptor = u'Tiempo de revisión total promedio de {0}'.format(assistant.person.get_full_name())
-        indicators.append((indicator_descriptor, average_days))
+        indicators.append((indicator_descriptor, s_average_days))
+        chart_data.append((assistant.person.get_full_name(), average_days))
+    generate_bar_chart(chart_data, 1, u'Tiempo de revisión promedio')
 
     # tiempo_revision_auxiliar_promedio
     auxiliaries = Auxiliary.objects.filter(course_instance = course_instance)
+    chart_data = []
     for auxiliary in auxiliaries:
         auxiliary_reports = Report.objects.filter(group__auxiliary = auxiliary).filter(first_correction_date__isnull = False)
         total_days = 0 # el tiempo total en días
@@ -214,9 +266,11 @@ def indicators(request, course_instance, coordinator_id):
                 time_delta = report.validation_date - report.description.feedback_return_date
             total_days += time_delta.days
         average_days = 1.0 * total_days / (reports.count() or 1) # la cantidad de dias promedio
-        average_days = u"{0} día(s)".format(average_days)
+        s_average_days = u"{0} día(s)".format(average_days)
         indicator_descriptor = u'Tiempo de revisión de feedback total promedio de {0}'.format(auxiliary.person.get_full_name())
-        indicators.append((indicator_descriptor, average_days))
+        indicators.append((indicator_descriptor, s_average_days))
+        chart_data.append((auxiliary.person.get_full_name(), average_days))
+    generate_bar_chart(chart_data, 2, u'Tiempo de revisión de feedback promedio')
 
     # porcentaje_informes_entregados
     reports = Report.objects.filter(description__course_instance = course_instance)

@@ -13,7 +13,7 @@
                         <li>{{ report.group.name }} (
                         <a href="https://spreadsheets.google.com/ccc?key={{report.feedback_key}}">Ver documento de feedback</a> / 
                         {% if report.last_delivery_date %}<a href="/site_media/uploaded_reports/{{report.id}}.zip">Descargar entrega</a> / {% endif %}
-                        {% if report.corrected %}<a href="{% url prototipo.views_auxiliary.unmark_as_corrected auxiliary.id report.id %}">Marcar como no corregido</a> /<a href="{% url prototipo.views_auxiliary.mark_as_validated auxiliary.id report.id %}">Marcar como validado</a> ) {% endif %}
+                        {% if report.corrected %}{% if not report.validation_date %}<a href="{% url prototipo.views_auxiliary.unmark_as_corrected auxiliary.id report.id %}">Marcar como no corregido</a> / <a href="{% url prototipo.views_auxiliary.mark_as_validated auxiliary.id report.id %}">Marcar como validado</a>  {% endif %} {% endif %} )
                         </li>
                     {% endfor %}                        
                 </ul>
